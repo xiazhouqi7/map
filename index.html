@@ -4,116 +4,171 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>世界与中国 · 地图展示</title>
-  <meta name="description" content="中国地图与世界地图的自适应展示页面" />
+  <meta name="description" content="中国地图与世界地图的高清展示，支持手机与电脑浏览" />
   <style>
     :root{
-      --bg: #faf6f1;           /* 奶杏 */
-      --bg-2:#fff4ec;          /* 淡橙 */
+      --bg:#faf6f1;
+      --bg-2:#fff4ec;
       --ink:#2b2b2b;
       --muted:#7a7a7a;
-      --card: rgba(255,255,255,.6);
-      --blur: 10px;
-      --radius: 18px;
-      --shadow: 0 8px 30px rgba(0,0,0,.08);
+      --card:rgba(255,255,255,.6);
+      --blur:10px;
+      --radius:18px;
+      --shadow:0 8px 30px rgba(0,0,0,.08);
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
-      margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      margin:0;
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;
       color:var(--ink);
       background:
         radial-gradient(1200px 800px at 10% -10%, var(--bg-2) 0, transparent 60%),
         radial-gradient(1200px 800px at 110% 10%, var(--bg-2) 0, transparent 60%),
         var(--bg);
     }
-    .wrap{max-width:960px; margin:0 auto; padding:24px 16px 40px}
+    .wrap{max-width:960px;margin:0 auto;padding:24px 16px 40px}
     header{
-      position:sticky; top:0; z-index:10;
+      position:sticky;top:0;z-index:10;
       backdrop-filter:saturate(140%) blur(var(--blur));
-      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
+      background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35));
       border-bottom:1px solid rgba(0,0,0,.06);
     }
-    .bar{max-width:960px; margin:0 auto; padding:12px 16px; display:flex; gap:12px; align-items:center; justify-content:space-between}
-    .title{font-size:18px; font-weight:700; letter-spacing:.5px}
-    .nav{display:flex; gap:8px}
+    .bar{
+      max-width:960px;margin:0 auto;
+      padding:12px 16px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .title{font-size:18px;font-weight:700}
     .nav a{
-      text-decoration:none; color:var(--ink); font-size:14px; padding:6px 10px;
-      border-radius:999px; border:1px solid rgba(0,0,0,.08);
-      background:rgba(255,255,255,.6)
+      text-decoration:none;color:var(--ink);
+      font-size:14px;padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.08);
+      background:rgba(255,255,255,.6);
     }
-    main{padding-top:10px}
-    .grid{display:grid; gap:16px}
-    @media(min-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+    .grid{display:grid;gap:16px;margin-top:10px}
+    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
     .card{
-      background:var(--card); border:1px solid rgba(0,0,0,.06);
-      border-radius:var(--radius); box-shadow:var(--shadow);
-      overflow:hidden
+      background:var(--card);
+      border-radius:var(--radius);
+      border:1px solid rgba(0,0,0,.06);
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
-    .card header{position:static; backdrop-filter:none; background:transparent; border:0}
     .head{padding:14px 16px 0}
-    .head h2{margin:0; font-size:16px}
-    .head p{margin:4px 0 0; color:var(--muted); font-size:13px}
-    figure{margin:0; padding:12px}
+    .head h2{margin:0;font-size:16px}
+    .head p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    figure{margin:0;padding:12px}
+    figure a{display:block}
     img{
-      display:block; width:100%; height:auto; border-radius:12px;
-      background:#f3f3f3; object-fit:contain
+      width:100%;
+      border-radius:12px;
+      cursor:zoom-in;
+      background:#f3f3f3;
     }
     figcaption{
-      font-size:12px; color:var(--muted); text-align:center; padding:8px 12px 14px
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+      padding:8px 12px 14px;
     }
-    footer{margin-top:24px; font-size:12px; color:var(--muted); text-align:center}
-    .tip{margin-top:4px}
+
+    /* 图片预览层 */
+    .lightbox{
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+    }
+    .lightbox img{
+      max-width:92%;
+      max-height:92%;
+      border-radius:12px;
+      cursor:zoom-out;
+    }
+    .lightbox:target{display:flex}
+
+    footer{
+      margin-top:28px;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .tip{margin-top:6px}
     .backtop{
-      position:fixed; right:16px; bottom:16px; padding:8px 10px; font-size:13px;
-      border-radius:999px; border:1px solid rgba(0,0,0,.08);
-      background:#fff; text-decoration:none; color:var(--ink); box-shadow:var(--shadow)
+      position:fixed;right:16px;bottom:16px;
+      padding:8px 12px;
+      font-size:13px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      box-shadow:var(--shadow);
+      text-decoration:none;
+      color:var(--ink);
     }
   </style>
 </head>
 <body>
-  <header id="top">
-    <div class="bar">
-      <div class="title">世界与中国 · 地图展示</div>
-      <nav class="nav">
-        <a href="#china">中国</a>
-        <a href="#world">世界</a>
-      </nav>
-    </div>
-  </header>
-
-  <div class="wrap">
-    <main class="grid">
-      <!-- 中国地图 -->
-      <section class="card" id="china" aria-label="中国地图">
-        <div class="head">
-          <h2>中国地图</h2>
-          <p>高分辨率 JPG，等比自适应，支持手机端浏览</p>
-        </div>
-        <figure>
-          <img src="china.jpg" alt="中国地图" loading="lazy" />
-          <figcaption>文件名：china.jpg · 建议原图宽边≥2400px</figcaption>
-        </figure>
-      </section>
-
-      <!-- 世界地图 -->
-      <section class="card" id="world" aria-label="世界地图">
-        <div class="head">
-          <h2>世界地图</h2>
-          <p>高分辨率 JPG，等比自适应，支持手机端浏览</p>
-        </div>
-        <figure>
-          <img src="shijie.jpg" alt="世界地图" loading="lazy" />
-          <figcaption>文件名：shijie.jpg · 建议原图宽边≥2400px</figcaption>
-        </figure>
-      </section>
-    </main>
-
-    <footer>
-      <div>© 小岛周末 · 图片仅作示意，实际以原图为准</div>
-      <div class="tip">提示：若图片过大，建议先压缩（如 Squoosh）再上传，以提升加载速度。</div>
-    </footer>
+<header id="top">
+  <div class="bar">
+    <div class="title">世界与中国 · 地图展示</div>
+    <nav class="nav">
+      <a href="#china">中国</a>
+      <a href="#world">世界</a>
+    </nav>
   </div>
+</header>
 
-  <a class="backtop" href="#top" aria-label="返回顶部">返回顶部</a>
+<div class="wrap">
+  <main class="grid">
+
+    <!-- 中国地图 -->
+    <section class="card" id="china">
+      <div class="head">
+        <h2>中国地图</h2>
+        <p>高清展示，适合手机与电脑浏览</p>
+      </div>
+      <figure>
+        <a href="#view-china">
+          <img src="china.jpg" alt="中国地图">
+        </a>
+        <figcaption>点击图片，可查看清晰原图</figcaption>
+      </figure>
+    </section>
+
+    <!-- 世界地图 -->
+    <section class="card" id="world">
+      <div class="head">
+        <h2>世界地图</h2>
+        <p>高清展示，支持放大查看细节</p>
+      </div>
+      <figure>
+        <a href="#view-world">
+          <img src="shijie.jpg" alt="世界地图">
+        </a>
+        <figcaption>点击图片，可查看完整世界地图</figcaption>
+      </figure>
+    </section>
+
+  </main>
+
+  <footer>
+    <div>© 小岛周末 · 地图内容用于学习与展示参考</div>
+    <div class="tip">如加载较慢，请耐心等待，高清图片体积较大</div>
+  </footer>
+</div>
+
+<a class="backtop" href="#top">返回顶部</a>
+
+<!-- 预览层 -->
+<div id="view-china" class="lightbox">
+  <a href="#"><img src="china.jpg" alt=""></a>
+</div>
+<div id="view-world" class="lightbox">
+  <a href="#"><img src="shijie.jpg" alt=""></a>
+</div>
+
 </body>
 </html>
