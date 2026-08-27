@@ -1,3 +1,3 @@
 # Xiazhouqi TikTok & Douyin Cover Skill v3.1
 
-Temporary restoration marker. Full canonical file is being migrated to the dedicated repository.
+Migration in progress. Canonical source preserved locally and will be moved to the dedicated repository.
